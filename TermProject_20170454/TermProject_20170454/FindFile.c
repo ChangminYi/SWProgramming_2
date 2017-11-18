@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <Windows.h>
+#include "Function_Define.h"
 
 HWND fileHandle;
 BOOL prev_operated = FALSE;
@@ -10,7 +11,6 @@ WIN32_FIND_DATA tF, *tempFile = &tF;
 char prevTempName[100] = { 0 };
 
 char *SearchFile() {
-
 	if (prev_operated == FALSE) {
 		fileHandle = FindFirstFile("dataset\\*.txt", tempFile);
 

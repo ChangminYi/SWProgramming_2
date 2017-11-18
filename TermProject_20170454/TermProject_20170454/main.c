@@ -5,7 +5,7 @@
 ///////////////////////////////////////////////////////
 /////////////////////////////////////////////////////*/
 
-////	프로그램 개요
+/*		프로그램 개요		*/
 //FindFirstFile, FindNextFile 사용하여 파일 탐색
 //파일 이름 문자열로 저장
 //파일 하나하나 열어서 문자열 탐색 (여기서 스레드 사용 가능성)
@@ -15,35 +15,59 @@
 
 #define _CRT_SECURE_NO_WARNINGS
 
-//헤더파일
+//기본 헤더파일
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>			//for 시간측정
-//#include <Windows.h>		//for 파일 탐색
-//#include <process.h>		//for 스레드 사용
+#include <time.h>
+
+//함수 정의 헤더파일
 #include "Function_Define.h"
 
+void main(int argc, char **argv) {
+	char *wordToFind = (char *)calloc(sizeof(char), 1);
+	{//인자로 받은 문자열 저장
+		for (int i = 1; i < argc; i++) {
+			wordToFind = (char *)realloc(wordToFind, _msize(wordToFind) + strlen(argv[i]));
+			strcat(wordToFind, argv[i]);
 
-void main(char *argv) {
-	char *wordToFind = (char *)calloc(strlen(argv), sizeof(char));
-	strcpy(wordToFind, argv);
+			if (i != argc - 1) {
+				wordToFind = (char *)realloc(wordToFind, _msize(wordToFind) + sizeof(char));
+				strcat(wordToFind, " ");
+			}
+		}
+	}
 
-	char **fileList = NULL;
-	char *fileName = NULL;
+	char **fileList = (char **)calloc(sizeof(char *), 1);
+	char *tempFileName = NULL;
 	int frontClock, rearClock;
+	int fileCount = 0;
 
 	frontClock = clock();
-	do {
-		fileName = SearchFile();
 
-		if (fileName != NULL) {
-			puts(fileName);
+	printf("Word to search: %s\n\n", wordToFind);
+	while (1) {
+		tempFileName = SearchFile();
+
+		if (tempFileName != NULL) {
+			fileList = (char **)realloc(fileList, sizeof(char *) * (fileCount + 1));
+			fileList[fileCount] = (char *)calloc(strlen(tempFileName), sizeof(char));
+			strcpy(fileList[fileCount++], tempFileName);
 		}
-	} while (fileName != NULL);
+		else {
+			break;
+		}
+	}
+
+	fileAnalyze(fileList, wordToFind, fileCount);
+
 	rearClock = clock();
 
-	printf("경과시간: %.3lf초\n", (double)(rearClock - frontClock) / CLOCKS_PER_SEC);
+	printf("경과시간: %lf초\n", (double)((rearClock - frontClock) / CLOCKS_PER_SEC));
+
+	free(wordToFind);
+	free(fileList);
+	free(tempFileName);
 
 	system("pause");
 	return;
