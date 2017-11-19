@@ -5,14 +5,15 @@
 #include <Windows.h>
 #include "Function_Define.h"
 
-HWND fileHandle;
-BOOL prev_operated = FALSE;
-WIN32_FIND_DATA tF, *tempFile = &tF;
-char prevTempName[100] = { 0 };
+WIN32_FIND_DATA tempFile;	//찾은 파일 정보 저장
+char prevTempName[100] = { 0 };	//바로 앞의 탐색에서 찾았던 파일
 
 char *SearchFile() {
+	static HWND fileHandle;		//파일 탐색 핸들
+	static BOOL prev_operated = FALSE;		//처음 실행인지 아닌지 구분
+
 	if (prev_operated == FALSE) {
-		fileHandle = FindFirstFile("dataset\\*.txt", tempFile);
+		fileHandle = FindFirstFile("dataset\\*.txt", &tempFile);
 
 		if (fileHandle == INVALID_HANDLE_VALUE) {
 			puts("There is no file.");
@@ -21,23 +22,23 @@ char *SearchFile() {
 		}
 		else {
 			prev_operated = TRUE;
-			strcpy(prevTempName, tempFile->cFileName);
+			strcpy(prevTempName, &tempFile.cFileName);
 
-			return tempFile->cFileName;
+			return &tempFile.cFileName;
 		}
 	}
 	else {
-		FindNextFile(fileHandle, tempFile);
+		FindNextFile(fileHandle, &tempFile);
 
-		if (!strcmp(prevTempName, tempFile->cFileName)) {
+		if (!strcmp(prevTempName, &tempFile.cFileName)) {
 			FindClose(fileHandle);
 
 			return NULL;
 		}
 		else {
-			strcpy(prevTempName, tempFile->cFileName);
+			strcpy(prevTempName, &tempFile.cFileName);
 
-			return tempFile->cFileName;
+			return &tempFile.cFileName;
 		}
 	}
 }
