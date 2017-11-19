@@ -1,6 +1,6 @@
 #pragma once
 
 typedef struct FILEDATA {
-	unsigned int order;
-	unsigned int frequency;
+	int order;
+	int frequency;
 }fData;
