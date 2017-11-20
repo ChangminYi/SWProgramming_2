@@ -2,8 +2,10 @@
 #include "Function_Define.h"
 #include "Struct_Define.h"
 
+
 fData **sortStruct(fData **data, int Left, int Right) {
-	if (Left >= Right) {
+	//퀵소트(오류있음->수정계획)
+	/*if (Left >= Right) {
 		return NULL;
 	}
 	else {
@@ -11,7 +13,7 @@ fData **sortStruct(fData **data, int Left, int Right) {
 		int L = Left, R = Right;
 		fData *temp = NULL;
 
-		while (1) {
+		for (;;) {
 			while (data[L]->frequency < data[pivot]->frequency) {
 				L++;
 			}
@@ -29,6 +31,19 @@ fData **sortStruct(fData **data, int Left, int Right) {
 
 		sortStruct(data, Left, R);
 		sortStruct(data, L, Right);
+	}
+	*/
+
+	//버블소트
+	fData *temp;
+	for (int i = 0; i < Right - Left; i++) {
+		for (int j = 0; j < Right - Left - i; j++) {
+			if (data[j]->frequency > data[j + 1]->frequency) {
+				temp = data[j];
+				data[j] = data[j + 1];
+				data[j + 1] = temp;
+			}
+		}
 	}
 
 	return data;

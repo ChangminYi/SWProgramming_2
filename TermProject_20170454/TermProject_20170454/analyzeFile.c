@@ -34,13 +34,13 @@ fData **fileAnalyze(char **fileName, char *toFind, int numFiles) {
 
 int **dataAnalyze(char **fileName, char *toFind) {
 	char **data = NULL;
-	char *toFindTest = "Computer";	//테스트용 문자열
+	//char *toFindTest = "Computer";	//테스트용 문자열
 
 	int **wordFindCount = (int **)calloc(sizeof(int *), _msize(fileName) / sizeof(char *));
 	for (int i = 0; i < _msize(fileName) / sizeof(char *); i++) {
 		wordFindCount[i] = (int *)malloc(sizeof(int));
 		data = dataSearch(fileName, i);
-		wordFindCount[i] = wordSearch(data, toFindTest);
+		wordFindCount[i] = wordSearch(data, toFind/*Test*/);
 	}
 
 	free(data);

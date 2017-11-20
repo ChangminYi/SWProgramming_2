@@ -51,7 +51,7 @@ void main(int argc, char **argv) {
 
 
 	printf("Word to search: %s\n\n", wordToFind);
-	while (1) {
+	for (;;) {
 		tempFileName = SearchFile();
 
 		if (tempFileName != NULL) {
@@ -62,6 +62,9 @@ void main(int argc, char **argv) {
 		else {
 			break;
 		}
+	}
+	if (fileList[0] == NULL) {
+		return;
 	}
 
 	freqData = sortStruct(fileAnalyze(fileList, wordToFind, fileCount), 0, fileCount - 1);
