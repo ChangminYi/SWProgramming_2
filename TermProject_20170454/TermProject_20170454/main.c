@@ -50,7 +50,7 @@ void main(int argc, char **argv) {
 	int fileCount = 0;
 
 
-	printf("Word to search: %s\n\n", wordToFind);
+	printf("Word to search: \"%s\"\n\n", wordToFind);
 	for (;;) {
 		tempFileName = SearchFile();
 
@@ -77,7 +77,7 @@ void main(int argc, char **argv) {
 	free(tempFileName);
 
 	int rearClock = clock();
-	printf("경과시간: %lf초\n", ((double)(rearClock - frontClock) / (double)CLOCKS_PER_SEC));	//시간측정이 잘 안나온다.
+	printf("경과시간: %.3lf초\n", ((double)(rearClock - frontClock) / (double)CLOCKS_PER_SEC));	//시간측정이 잘 안나온다.
 
 	system("pause");
 	return;

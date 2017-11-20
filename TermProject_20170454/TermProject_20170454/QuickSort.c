@@ -4,21 +4,28 @@
 
 
 fData **sortStruct(fData **data, int Left, int Right) {
+	fData *temp;
+
 	//퀵소트(오류있음->수정계획)
-	/*if (Left >= Right) {
+	if (Left >= Right) {
 		return NULL;
 	}
 	else {
 		int pivot = (Left + Right) / 2;
 		int L = Left, R = Right;
-		fData *temp = NULL;
 
 		for (;;) {
 			while (data[L]->frequency < data[pivot]->frequency) {
-				L++;
+					L++;
+					if (L <= Right) {
+						break;
+					}
 			}
 			while (data[R]->frequency > data[pivot]->frequency) {
 				R--;
+				if (R <= Left) {
+					break;
+				}
 			}
 			if (L > R) {
 				break;
@@ -32,10 +39,8 @@ fData **sortStruct(fData **data, int Left, int Right) {
 		sortStruct(data, Left, R);
 		sortStruct(data, L, Right);
 	}
-	*/
 
-	//버블소트
-	fData *temp;
+	//버블소트 (정렬 체크용)
 	for (int i = 0; i < Right - Left; i++) {
 		for (int j = 0; j < Right - Left - i; j++) {
 			if (data[j]->frequency > data[j + 1]->frequency) {
@@ -45,6 +50,7 @@ fData **sortStruct(fData **data, int Left, int Right) {
 			}
 		}
 	}
+	
 
 	return data;
 }
