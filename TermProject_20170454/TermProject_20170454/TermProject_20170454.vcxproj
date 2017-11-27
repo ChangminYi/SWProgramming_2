@@ -114,7 +114,7 @@
     <ClCompile Include="analyzeFile.c" />
     <ClCompile Include="FindFile.c" />
     <ClCompile Include="Main.c" />
-    <ClCompile Include="QuickSort.c" />
+    <ClCompile Include="Sort.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Function_Define.h" />

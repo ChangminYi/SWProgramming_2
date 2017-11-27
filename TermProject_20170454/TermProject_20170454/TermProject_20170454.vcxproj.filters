@@ -24,7 +24,7 @@
     <ClCompile Include="analyzeFile.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="QuickSort.c">
+    <ClCompile Include="Sort.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

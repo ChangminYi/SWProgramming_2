@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <omp.h>
 
 //함수 정의 헤더파일
 #include "Function_Define.h"
@@ -68,8 +69,17 @@ void main(int argc, char **argv) {
 	}
 
 	freqData = sortStruct(fileAnalyze(fileList, wordToFind, fileCount), 0, fileCount - 1);
+	nameSort(freqData);
+
 	for (int k = 0; k < _msize(freqData) / sizeof(fData *); k++) {
-		printf("FileName: %s, Order: %d, Frequency: %d\n", fileList[(freqData[k]->order - 1)], freqData[k]->order, freqData[k]->frequency);;
+
+		//만약 출현빈도가 0이면 출력 안함.
+		if (freqData[k]->frequency == 0) {
+			break;
+		}
+		else {
+			printf("%d. FileName: %s: Frequency: %d\n", k + 1, fileList[(freqData[k]->order - 1)], freqData[k]->frequency);
+		}
 	}
 
 	free(wordToFind);
