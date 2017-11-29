@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <ctype.h>
 #include <omp.h>	//for 멀티스레드
 
 #define NUMBER_OF_THREAD 8
@@ -34,7 +35,6 @@ fData **fileAnalyze(char **fileName, char *toFind, int numFiles) {
 
 int **dataAnalyze(char **fileName, char *toFind) {
 	char **data = NULL;
-	//char *toFindTest = "Computer";	//테스트용 문자열
 
 	int **wordFindCount = (int **)calloc(sizeof(int *), _msize(fileName) / sizeof(char *));
 	for (int i = 0; i < _msize(fileName) / sizeof(char *); i++) {
@@ -48,17 +48,20 @@ int **dataAnalyze(char **fileName, char *toFind) {
 }
 
 char **dataSearch(char **fileName, int order) {
-	char sentenceTemp[1000] = { 0 };
+	char sentenceTemp[1000] = { 0 };	//버퍼
+	//파일 경로 및 이름 설정
 	char *fileLoc = (char *)calloc(strlen("dataset\\")+strlen(fileName[order]), 1);
 	strcpy(fileLoc, "dataset\\");
 	strcat(fileLoc, fileName[order]);
 
+	//파일 열기 예외처리
 	FILE *tempfp = fopen(fileLoc, "r");
 	if (tempfp == NULL) {
 		puts("File open error.");
 		return 0;
 	}
 
+	//파일 사이즈 측정
 	fseek(tempfp, 0, SEEK_END);
 	long fileSize = ftell(tempfp);
 	fseek(tempfp, 0, SEEK_SET);
@@ -67,7 +70,16 @@ char **dataSearch(char **fileName, int order) {
 	int sentenceCount = 0;
 	do {
 		fgets(sentenceTemp, sizeof(sentenceTemp), tempfp);
+		//openMP 사용하여 모두 소문자화
+		omp_set_num_threads(NUMBER_OF_THREAD);
+#pragma omp parallel for
+		for (int i = 0; i < strlen(sentenceTemp); i++) {
+			if (isupper(sentenceTemp[i])) {
+				sentenceTemp[i] = tolower(sentenceTemp[i]);
+			}
+		}
 
+		//정보 복사
 		tempData = (char **)realloc(tempData, sizeof(char *) * (sentenceCount + 2));
 		tempData[sentenceCount] = (char *)calloc(sizeof(char), strlen(sentenceTemp) + 1);
 		strcpy(tempData[sentenceCount++], sentenceTemp);
@@ -92,7 +104,6 @@ int wordSearch(char **sentence, char *wordToFind) {
 			}
 			if (!strncmp(sentence[j] + i, wordToFind, strlen(wordToFind))) {
 				count++;
-				i += strlen(wordToFind);
 			}
 		}
 	}

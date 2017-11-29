@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include <time.h>
 #include <omp.h>
 
@@ -32,16 +33,22 @@ void main(int argc, char **argv) {
 	int frontClock = clock();
 
 	//인자로 받은 문자열 저장
-	char *wordToFind = (char *)calloc(sizeof(char), 1);
-	{
-		for (int i = 1; i < argc; i++) {
-			wordToFind = (char *)realloc(wordToFind, _msize(wordToFind) + strlen(argv[i]));
-			strcat(wordToFind, argv[i]);
+	char *originwordToFind = (char *)calloc(sizeof(char), 1);
+	for (int i = 1; i < argc; i++) {
+		originwordToFind = (char *)realloc(originwordToFind, _msize(originwordToFind) + strlen(argv[i]));
+		strcat(originwordToFind, argv[i]);
 
-			if (i != argc - 1) {
-				wordToFind = (char *)realloc(wordToFind, _msize(wordToFind) + sizeof(char));
-				strcat(wordToFind, " ");
-			}
+		if (i != argc - 1) {
+			originwordToFind = (char *)realloc(originwordToFind, _msize(originwordToFind) + sizeof(char));
+			strcat(originwordToFind, " ");
+		}
+	}
+	//문자열 소문자화
+	char *wordToFind = (char *)calloc(strlen(originwordToFind), 1);
+	strcpy(wordToFind, originwordToFind);
+	for (int i = 0; i < strlen(wordToFind); i++) {
+		if (isupper(wordToFind[i])) {
+			wordToFind[i] = tolower(wordToFind[i]);
 		}
 	}
 
@@ -51,7 +58,7 @@ void main(int argc, char **argv) {
 	int fileCount = 0;
 
 
-	printf("Word to search: \"%s\"\n\n", wordToFind);
+	printf("Word to search: \"%s\"\n\n", originwordToFind);
 	for (;;) {
 		tempFileName = SearchFile();
 
@@ -72,17 +79,17 @@ void main(int argc, char **argv) {
 	nameSort(freqData);
 
 	for (int k = 0; k < _msize(freqData) / sizeof(fData *); k++) {
-
-		//만약 출현빈도가 0이면 출력 안함.
+		//만약 출현빈도가 0이면 거기서부터는 출력 안함.
 		if (freqData[k]->frequency == 0) {
 			break;
 		}
 		else {
-			printf("%d. FileName: %s: Frequency: %d\n", k + 1, fileList[(freqData[k]->order - 1)], freqData[k]->frequency);
+			printf("%d. %s: Frequency: %d\n", k + 1, fileList[(freqData[k]->order - 1)], freqData[k]->frequency);
 		}
 	}
 
-	free(wordToFind);
+	free(originwordToFind);
+	//free(wordToFind);
 	free(fileList);
 	free(tempFileName);
 
