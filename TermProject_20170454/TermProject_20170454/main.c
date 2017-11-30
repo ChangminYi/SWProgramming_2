@@ -33,24 +33,17 @@ void main(int argc, char **argv) {
 	int frontClock = clock();
 
 	//인자로 받은 문자열 저장
-	char *originwordToFind = (char *)calloc(sizeof(char), 1);
+	char *wordToFind = (char *)calloc(sizeof(char), 1);
 	for (int i = 1; i < argc; i++) {
-		originwordToFind = (char *)realloc(originwordToFind, _msize(originwordToFind) + strlen(argv[i]));
-		strcat(originwordToFind, argv[i]);
+		wordToFind = (char *)realloc(wordToFind, _msize(wordToFind) + strlen(argv[i]));
+		strcat(wordToFind, argv[i]);
 
 		if (i != argc - 1) {
-			originwordToFind = (char *)realloc(originwordToFind, _msize(originwordToFind) + sizeof(char));
-			strcat(originwordToFind, " ");
+			wordToFind = (char *)realloc(wordToFind, _msize(wordToFind) + sizeof(char));
+			strcat(wordToFind, " ");
 		}
 	}
-	//문자열 소문자화
-	char *wordToFind = (char *)calloc(strlen(originwordToFind), 1);
-	strcpy(wordToFind, originwordToFind);
-	for (int i = 0; i < strlen(wordToFind); i++) {
-		if (isupper(wordToFind[i])) {
-			wordToFind[i] = tolower(wordToFind[i]);
-		}
-	}
+
 
 	fData **freqData = NULL;
 	char **fileList = (char **)calloc(sizeof(char *), 1);
@@ -58,7 +51,7 @@ void main(int argc, char **argv) {
 	int fileCount = 0;
 
 
-	printf("Word to search: \"%s\"\n\n", originwordToFind);
+	printf("Word to search: \"%s\"\n\n", wordToFind);
 	for (;;) {
 		tempFileName = SearchFile();
 
@@ -84,12 +77,11 @@ void main(int argc, char **argv) {
 			break;
 		}
 		else {
-			printf("%d. %s: Frequency: %d\n", k + 1, fileList[(freqData[k]->order - 1)], freqData[k]->frequency);
+			printf("%4d. %s: Frequency: %d\n", k + 1, fileList[(freqData[k]->order - 1)], freqData[k]->frequency);
 		}
 	}
 
-	free(originwordToFind);
-	//free(wordToFind);
+	free(wordToFind);
 	free(fileList);
 	free(tempFileName);
 

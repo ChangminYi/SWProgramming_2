@@ -1,4 +1,5 @@
 #define _CRT_SECURE_NO_WARNINGS
+#pragma warning (disable:4996) //strnicmp() 함수 사용을 위한 경고 무시
 
 #include <stdio.h>
 #include <string.h>
@@ -6,15 +7,17 @@
 #include <ctype.h>
 #include <omp.h>	//for 멀티스레드
 
-#define NUMBER_OF_THREAD 8
+
+//검사한 내용 저장할 구조체
+#include "Struct_Define.h"
+
+//매크로 정의 헤더
+#include "Macro_Define.h"
 
 //파일 정보 복사, 복사한 내용 검사
 char **dataSearch(char **fileName, int order);
 int wordSearch(char **sentence, char *wordToFind);
 int **dataAnalyze(char **fileName, char *toFind);
-
-//검사한 내용 저장할 구조체
-#include "Struct_Define.h"
 
 //구조체에 순서, 정보 담아서 반환
 fData **fileAnalyze(char **fileName, char *toFind, int numFiles) {
@@ -70,14 +73,6 @@ char **dataSearch(char **fileName, int order) {
 	int sentenceCount = 0;
 	do {
 		fgets(sentenceTemp, sizeof(sentenceTemp), tempfp);
-		//openMP 사용하여 모두 소문자화
-		omp_set_num_threads(NUMBER_OF_THREAD);
-#pragma omp parallel for
-		for (int i = 0; i < strlen(sentenceTemp); i++) {
-			if (isupper(sentenceTemp[i])) {
-				sentenceTemp[i] = tolower(sentenceTemp[i]);
-			}
-		}
 
 		//정보 복사
 		tempData = (char **)realloc(tempData, sizeof(char *) * (sentenceCount + 2));
@@ -102,7 +97,7 @@ int wordSearch(char **sentence, char *wordToFind) {
 			if (strlen(sentence[j]) < strlen(wordToFind)) {
 				break;
 			}
-			if (!strncmp(sentence[j] + i, wordToFind, strlen(wordToFind))) {
+			if (!strnicmp(sentence[j] + i, wordToFind, strlen(wordToFind))) {
 				count++;
 			}
 		}
