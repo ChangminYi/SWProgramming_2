@@ -118,7 +118,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Function_Define.h" />
-    <ClInclude Include="Macro_Define.h" />
     <ClInclude Include="Struct_Define.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

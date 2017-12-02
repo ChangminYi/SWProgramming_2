@@ -12,12 +12,9 @@
 //검사한 내용 저장할 구조체
 #include "Struct_Define.h"
 
-//매크로 정의 헤더
-#include "Macro_Define.h"
-
 //파일 정보 복사, 복사한 내용 검사
 char **dataSearch(char **fileName, int order);
-int wordSearch(char **sentence, char *wordToFind);
+int wordSearch(char **sentence, char *wordToFind, int threadNumber);
 int **dataAnalyze(char **fileName, char *toFind);
 
 //시간측정을 위한 변수
@@ -44,12 +41,13 @@ fData **fileAnalyze(char **fileName, char *toFind, int numFiles) {
 
 int **dataAnalyze(char **fileName, char *toFind) {
 	char **data = NULL;
+	int numThread = omp_get_num_threads();
 
 	int **wordFindCount = (int **)calloc(sizeof(int *), _msize(fileName) / sizeof(char *));
 	for (int i = 0; i < _msize(fileName) / sizeof(char *); i++) {
 		wordFindCount[i] = (int *)malloc(sizeof(int));
 		data = dataSearch(fileName, i);
-		wordFindCount[i] = wordSearch(data, toFind/*Test*/);
+		wordFindCount[i] = wordSearch(data, toFind, numThread);
 	}
 
 	free(data);
@@ -91,12 +89,12 @@ char **dataSearch(char **fileName, int order) {
 	return tempData;
 }
 
-int wordSearch(char **sentence, char *wordToFind) {
+int wordSearch(char **sentence, char *wordToFind, int threadNumber) {
 	int count = 0;
 	int loopCount = _msize(sentence) / sizeof(char *);
 
 	//openMP 사용
-	omp_set_num_threads(NUMBER_OF_THREAD);
+	omp_set_num_threads(threadNumber);
 #pragma omp parallel for
 	for (int j = 0; j < loopCount - 2; j++) {
 		for (int i = 0; i < strlen(sentence[j]) - strlen(wordToFind); i++) {
