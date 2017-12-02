@@ -1,23 +1,72 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "Function_Define.h"
 #include "Struct_Define.h"
 
+//병합정렬 시 사용할 임시 메모리
+fData **sortTemp = NULL;
 
-//버블소트 (퀵소트는 오류나서 잠깐 보류)
+void mergesort(fData **arg, int l, int r);
+void merge(fData **arg, int l, int m, int r);
+
+//병합정렬 (퀵소트는 도저히 짤 수가 없었음)
 fData **sortStruct(fData **data, int Left, int Right) {
-	fData *temp;
 
-	for (int i = 0; i < Right - Left; i++) {
-		for (int j = 0; j < Right - Left - i; j++) {
-			if (data[j]->frequency < data[j + 1]->frequency) {
-				temp = data[j];
-				data[j] = data[j + 1];
-				data[j + 1] = temp;
-			}
+	sortTemp = (fData **)malloc(_msize(data));
+	mergesort(data, 0, _msize(data) / sizeof(fData **) - 1);
+
+	free(sortTemp);
+	return data;
+}
+
+void mergesort(fData **arg, int l, int r) {
+	if (l < r) {
+		int m = (l + r) / 2;
+
+		mergesort(arg, l, m);
+		mergesort(arg, m + 1, r);
+
+		merge(arg, l, m, r);
+	}
+
+	return;
+}
+
+void merge(fData **arg, int l, int m, int r) {
+	int n1 = m - l + 1;
+	int n2 = r - m;
+
+	fData **L = (fData **)malloc(sizeof(fData) * n1);
+	fData **R = (fData **)malloc(sizeof(fData) * n2);
+
+	for (int i = 0; i < n1; i++) {
+		L[i] = arg[l + i];
+	}
+	for (int j = 0; j < n2; j++) {
+		R[j] = arg[m + j + 1];
+	}
+
+	int i = 0, j = 0, k = l;
+	while (i < n1 && j < n2) {
+		if (L[i]->frequency >= R[j]->frequency) {
+			arg[k++] = L[i++];
+		}
+		else {
+			arg[k++] = R[j++];
 		}
 	}
 
-	return data;
+	while (i < n1) {
+		arg[k++] = L[i++];
+	}
+	while (j < n2) {
+		arg[k++] = R[j++];
+	}
+
+	free(L);
+	free(R);
+
+	return;
 }
 
 //이름 오름차순으로 정렬

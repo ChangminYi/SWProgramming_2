@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <time.h>
 #include <omp.h>	//for 멀티스레드
 
 
@@ -19,6 +20,9 @@ char **dataSearch(char **fileName, int order);
 int wordSearch(char **sentence, char *wordToFind);
 int **dataAnalyze(char **fileName, char *toFind);
 
+//시간측정을 위한 변수
+int analyzeTime;
+
 //구조체에 순서, 정보 담아서 반환
 fData **fileAnalyze(char **fileName, char *toFind, int numFiles) {
 	fData **AnalyzedFile = (fData **)calloc(sizeof(fData), numFiles);
@@ -32,6 +36,8 @@ fData **fileAnalyze(char **fileName, char *toFind, int numFiles) {
 		AnalyzedFile[i]->order = i + 1;
 		AnalyzedFile[i]->frequency = freqData[i];
 	}
+
+	analyzeTime = clock();
 
 	return AnalyzedFile;
 }

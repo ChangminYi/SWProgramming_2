@@ -1,7 +1,9 @@
-﻿  Main.c
-Main.c(66): warning C4047: '==': 'int'의 간접 참조 수준이 'void *'과(와) 다릅니다.
+﻿  analyzeFile.c
+analyzeFile.c(37): warning C4047: '=': 'int'의 간접 참조 수준이 'int *'과(와) 다릅니다.
+analyzeFile.c(52): warning C4047: '=': 'int *'의 간접 참조 수준이 'int'과(와) 다릅니다.
+analyzeFile.c(96): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   코드를 생성하고 있습니다.
-  2 of 10 functions (20.0%) were compiled, the rest were copied from previous compilation.
+  2 of 13 functions (15.4%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     0 functions had inline decision re-evaluated but remain unchanged
   코드를 생성했습니다.
