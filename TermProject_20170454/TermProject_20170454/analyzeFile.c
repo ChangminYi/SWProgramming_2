@@ -14,7 +14,7 @@
 
 //파일 정보 복사, 복사한 내용 검사
 char **dataSearch(char **fileName, int order);
-int wordSearch(char **sentence, char *wordToFind, int threadNumber);
+int wordSearch(char **sentence, char *wordToFind);
 int **dataAnalyze(char **fileName, char *toFind);
 
 //시간측정을 위한 변수
@@ -23,6 +23,7 @@ int analyzeTime;
 //구조체에 순서, 정보 담아서 반환
 fData **fileAnalyze(char **fileName, char *toFind, int numFiles) {
 	fData **AnalyzedFile = (fData **)calloc(sizeof(fData), numFiles);
+
 	for (int i = 0; i < numFiles; i++) {
 		AnalyzedFile[i] = (fData *)malloc(sizeof(fData));
 	}
@@ -44,6 +45,10 @@ int **dataAnalyze(char **fileName, char *toFind) {
 	int numThread = omp_get_num_threads();
 
 	int **wordFindCount = (int **)calloc(sizeof(int *), _msize(fileName) / sizeof(char *));
+
+	//openMP 사용
+	omp_set_num_threads(numThread);
+#pragma omp parallel for
 	for (int i = 0; i < _msize(fileName) / sizeof(char *); i++) {
 		wordFindCount[i] = (int *)malloc(sizeof(int));
 		data = dataSearch(fileName, i);
@@ -89,13 +94,10 @@ char **dataSearch(char **fileName, int order) {
 	return tempData;
 }
 
-int wordSearch(char **sentence, char *wordToFind, int threadNumber) {
+int wordSearch(char **sentence, char *wordToFind) {
 	int count = 0;
 	int loopCount = _msize(sentence) / sizeof(char *);
 
-	//openMP 사용
-	omp_set_num_threads(threadNumber);
-#pragma omp parallel for
 	for (int j = 0; j < loopCount - 2; j++) {
 		for (int i = 0; i < strlen(sentence[j]) - strlen(wordToFind); i++) {
 			if (strlen(sentence[j]) < strlen(wordToFind)) {

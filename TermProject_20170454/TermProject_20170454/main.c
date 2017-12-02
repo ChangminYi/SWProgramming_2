@@ -90,9 +90,14 @@ void main(int argc, char **argv) {
 		}
 	}
 	else {
-		printf("There is no \"%s\" in files\n.", wordToFind);
+		printf("There is no \"%s\" in files.\n\n", wordToFind);
 	}
 
+	//할당받은 메모리 반환
+	for (int i = 0; i < _msize(freqData) / sizeof(fData **); i++) {
+		free(freqData[i]);
+	}
+	free(freqData);
 	free(wordToFind);
 	free(fileList);
 	free(tempFileName);
@@ -103,7 +108,7 @@ void main(int argc, char **argv) {
 	printf("파일 탐색 경과시간: %.3lf초\n", (double)(searchTime - frontClock) / (double)CLOCKS_PER_SEC);
 	printf("파일 분석 경과시간: %.3lf초\n", (double)(analyzeTime - searchTime) / (double)CLOCKS_PER_SEC);
 	printf("데이터 정렬 경과시간: %.3lf초\n", (double)(sortTime - analyzeTime) / (double)CLOCKS_PER_SEC);
-	printf("출력 및 정리 경과시간: %.3lf초\n", (double)(rearClock - sortTime) / (double)CLOCKS_PER_SEC);
+	printf("출력 및 정리 경과시간: %.3lf초\n\n", (double)(rearClock - sortTime) / (double)CLOCKS_PER_SEC);
 
 	system("pause");
 	return;
