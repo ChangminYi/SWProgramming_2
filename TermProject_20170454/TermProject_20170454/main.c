@@ -32,7 +32,7 @@
 void main(int argc, char **argv) {
 	long frontClock = clock();	//초기시간
 
-	system("cls");
+	system("cls");	//화면정리
 
 	//인자로 받은 문자열 저장
 	char *wordToFind = (char *)calloc(sizeof(char), 1);
@@ -47,13 +47,14 @@ void main(int argc, char **argv) {
 	}
 
 
-	fData **freqData = NULL;
-	char **fileList = (char **)calloc(sizeof(char *), 1);
+	fData **freqData = NULL;	//출력용 데이터
+	char **fileList = (char **)calloc(sizeof(char *), 1);	//파일 이름
 	char *tempFileName = NULL;
-	int fileCount = 0;
+	int fileCount = 0;	//파일 갯수
 
 
 	printf("Word to search: \"%s\"\n\n", wordToFind);
+	//파일 탐색
 	for (;;) {
 		tempFileName = SearchFile();
 
@@ -72,12 +73,14 @@ void main(int argc, char **argv) {
 
 	long searchTime = clock();	//파일 탐색까지 걸린 시간
 
+	//분석 후 정렬
 	freqData = sortStruct(fileAnalyze(fileList, wordToFind, fileCount), 0, fileCount - 1);
 	nameSort(freqData);
 
 	extern analyzeTime;			//분석에 걸린 시간
 	long sortTime = clock();	//정렬에 걸린 시간
 
+	//출력
 	if (freqData[0]->frequency != 0) {
 		for (int k = 0; k < _msize(freqData) / sizeof(fData *); k++) {
 			//만약 출현빈도가 0이면 거기서부터는 출력 안함.

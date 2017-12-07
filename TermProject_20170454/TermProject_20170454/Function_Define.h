@@ -8,6 +8,6 @@
 	fData **fileAnalyze(char **fileName, char *toFind, int numFiles);
 
 
-//QuickSort.c
+//Sort.c
 	fData **sortStruct(fData **data, int Left, int Right);
 	void nameSort(fData **data);
